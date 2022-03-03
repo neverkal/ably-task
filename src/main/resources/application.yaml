@@ -1,0 +1,22 @@
+spring:
+
+  datasource:
+    url: jdbc:mariadb://localhost:3306/ably_task?characterEncoding=UTF-8;
+    username: root
+    password: root123
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        format_sql: true
+    generate-ddl: true
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
