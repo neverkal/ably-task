@@ -37,6 +37,6 @@ public class OtpAuth {
     private String phoneNumber;
 
     @Column(nullable = false)
-    private int otpNumber;
+    private String otpNumber;
 
 }

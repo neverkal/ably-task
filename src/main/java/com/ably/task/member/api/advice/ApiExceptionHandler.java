@@ -10,7 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 
 @RestControllerAdvice
 @Slf4j
@@ -24,7 +25,7 @@ public class ApiExceptionHandler {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         return new ResponseEntity<>(
                 ApiResponse.fail(),
@@ -36,11 +37,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {IllegalArgumentException.class})
     public ResponseEntity<ApiResponse> handleIllegalArgumentException(IllegalArgumentException e) {
         log.error("Illegal Argument Exception");
+        log.error(e.getMessage());
 
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         return new ResponseEntity<>(
                 ApiResponse.illegalArgument(e),
@@ -52,11 +54,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         log.error("Validation Exception");
+        log.error(e.getMessage());
 
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         return new ResponseEntity<>(
                 ApiResponse.validationError(e),

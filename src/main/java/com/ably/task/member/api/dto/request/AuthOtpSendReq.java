@@ -15,7 +15,7 @@ import javax.validation.constraints.Pattern;
 public class AuthOtpSendReq {
 
     @NotNull(message = "휴대폰 번호를 입력해주세요.")
-//    @Pattern(regexp = RegexPattern.PHONE_NUMBER, message = "휴대폰 번호 형식이 올바르지 않습니다.(01012345678")
+    @Pattern(regexp = RegexPattern.PHONE_NUMBER, message = "휴대폰 번호 형식이 올바르지 않습니다.(01012345678)")
     String phoneNumber;
     AuthType authType;
 }

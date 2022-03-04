@@ -16,4 +16,5 @@ public class MemberRepositorySupport extends QuerydslRepositorySupport {
         super(Member.class);
         this.jpaQueryFactory = jpaQueryFactory;
     }
+
 }

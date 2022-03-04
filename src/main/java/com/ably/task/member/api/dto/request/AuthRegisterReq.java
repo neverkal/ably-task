@@ -14,10 +14,10 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRegisterReq {
+public class AuthRegisterReq {
     @NotNull(message = "이름을 입력해주세요.")
     @Pattern(regexp = RegexPattern.NAME, message = "이름 형식이 올바르지 않습니다.")
-    String userName;
+    String personName;
 
     @NotNull(message = "이메일을 입력해주세요.")
     @Email(message = "이메일 형식이 올바르지 않습니다.")
@@ -34,7 +34,7 @@ public class UserRegisterReq {
     String password;
 
     @NotNull(message = "휴대폰 번호를 입력해주세요.")
-//    @Pattern(regexp = RegexPattern.PHONE_NUMBER, message = "휴대폰 번호 형식이 올바르지 않습니다.(01012345678)")
+    @Pattern(regexp = RegexPattern.PHONE_NUMBER, message = "휴대폰 번호 형식이 올바르지 않습니다.(01012345678)")
     String phoneNumber;
 
     @NotNull(message = "휴대폰 번호 인증 아이디를 입력해주세요.")

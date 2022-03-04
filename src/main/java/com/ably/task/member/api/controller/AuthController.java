@@ -5,7 +5,6 @@ import com.ably.task.member.api.dto.response.AuthOtpSendRes;
 import com.ably.task.member.api.entity.Member;
 import com.ably.task.member.api.repository.MemberRepository;
 import com.ably.task.member.api.service.AuthService;
-import com.ably.task.member.common.ApiRequest;
 import com.ably.task.member.common.ApiResponse;
 import com.ably.task.member.config.security.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.charset.Charset;
-import java.util.Collections;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,22 +30,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/join")
-    public ResponseEntity<ApiResponse> join(@RequestBody @Valid UserRegisterReq request) {
-        Member member = Member.builder()
-                .email(request.getEmail())
-                .nickName(request.getNickName())
-                .phoneNumber(request.getPhoneNumber())
-                .personName(request.getUserName())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .roles(Collections.singletonList("ROLE_USER"))
-                .build();
+    public ResponseEntity<ApiResponse> join(@RequestBody @Valid AuthRegisterReq request) {
 
-        Long userId = authService.memberJoin(member);
+        Long userId = authService.memberJoin(request);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
-        ApiResponse apiResponse = ApiResponse.success("userId", userId);
+        ApiResponse apiResponse = ApiResponse.success("user_id", userId);
 
         return ResponseEntity.ok()
                 .headers(headers)
@@ -55,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody @Valid UserLoginReq request) {
+    public ResponseEntity<ApiResponse> login(@RequestBody @Valid AuthLoginReq request) {
         Member member = memberRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 이메일입니다."));
 
@@ -67,7 +57,7 @@ public class AuthController {
         String token = (loginValidate) ? jwtTokenProvider.createToken(member.getUsername(), member.getRoles()) : "";
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         ApiResponse apiResponse = ApiResponse.success("token", token);
 
@@ -80,7 +70,7 @@ public class AuthController {
     @PostMapping("/otp")
     public ResponseEntity<ApiResponse> otpSend(@RequestBody @Valid AuthOtpSendReq request) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         AuthOtpSendRes authOtpSendRes = authService.otpSend(request);
         ApiResponse apiResponse = ApiResponse.success("auth_info", authOtpSendRes);
@@ -95,7 +85,7 @@ public class AuthController {
         boolean othCheck = authService.otpCheck(request);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         ApiResponse apiResponse = ApiResponse.success("otp_auth", othCheck);
 
@@ -108,10 +98,8 @@ public class AuthController {
     public ResponseEntity<ApiResponse> passwordReset(@RequestBody @Valid MemberPasswordResetReq request) {
         boolean resetPasswordResult = authService.passwordReset(request);
 
-        log.info("reset password = {}", request);
-
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         ApiResponse apiResponse = ApiResponse.success("password_reset", resetPasswordResult);
 

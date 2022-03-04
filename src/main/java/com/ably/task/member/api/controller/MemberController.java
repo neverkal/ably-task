@@ -1,7 +1,9 @@
 package com.ably.task.member.api.controller;
 
+import com.ably.task.member.api.dto.response.MemberInfoRes;
 import com.ably.task.member.api.entity.Member;
 import com.ably.task.member.api.repository.MemberRepository;
+import com.ably.task.member.api.service.MemberService;
 import com.ably.task.member.common.ApiResponse;
 import com.ably.task.member.config.security.token.JwtTokenProvider;
 import com.ably.task.member.config.security.utils.SecurityUtil;
@@ -13,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -22,20 +24,24 @@ import java.util.Optional;
 @Slf4j
 public class MemberController {
 
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
 
     @GetMapping
     public ResponseEntity<ApiResponse> memberInfo() {
 
-        log.info("get member" + SecurityUtil.getCurrentMemberId());
+        Member member = memberRepository.findByEmail(SecurityUtil.getCurrentMemberId())
+                .orElseThrow(() -> new IllegalArgumentException("사용자 정보가 존재하지 않습니다."));
 
-        Optional<Member> member = memberRepository.findByEmail(SecurityUtil.getCurrentMemberId());
+        MemberInfoRes memberInfoRes = MemberInfoRes.builder()
+                .phoneNumber(member.getPhoneNumber())
+                .personName(member.getPersonName())
+                .nickName(member.getNickName())
+                .email(member.getEmail())
+                .build();
 
-        ApiResponse apiResponse = ApiResponse.success("member", member.get());
+        ApiResponse apiResponse = ApiResponse.success("member", memberInfoRes);
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+        headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
 
         return ResponseEntity.ok()
                 .headers(headers)

@@ -16,6 +16,6 @@ public class AuthOtpReq {
     long otpAuthId;
 
     @NotNull(message = "OTP 번호를 입력해주세요.")
-//    @Pattern(regexp = RegexPattern.OTP, message = "인증번호 4자리를 입력해주세요.")
-    int otpNumber;
+    @Pattern(regexp = RegexPattern.OTP, message = "인증번호 4자리를 입력해주세요.")
+    String otpNumber;
 }

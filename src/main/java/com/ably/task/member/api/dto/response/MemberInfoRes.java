@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthOtpSendRes {
-    long id;
-    String otp;
+public class MemberInfoRes {
+    String personName;
+    String email;
+    String nickName;
+    String phoneNumber;
 }

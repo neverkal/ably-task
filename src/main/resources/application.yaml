@@ -20,3 +20,10 @@ spring:
 
   jackson:
     property-naming-strategy: SNAKE_CASE
+
+logging:
+  level:
+    root: warn
+    org:
+      hibernate:
+        SQL: debug

@@ -14,7 +14,7 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserLoginReq {
+public class AuthLoginReq {
 
     @NotNull(message = "이메일을 입력해주세요.")
     @Email(message = "올바르지 않은 이메일 형식입니다.")
